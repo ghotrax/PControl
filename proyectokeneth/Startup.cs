@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using proyectokeneth.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using proyectokeneth.Models;
 
 namespace proyectokeneth
 {
@@ -34,11 +34,14 @@ namespace proyectokeneth
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+      
+
+            services.AddDbContext<proyectokenethContext>(options =>
+                    options.UseOracle(
+                        Configuration.GetConnectionString("proyectokenethContextConnection")));
+
+
+
 
             services.AddAuthentication()
                 .AddGoogle(options =>
