@@ -1,0 +1,71 @@
+﻿@model IEnumerable<proyectokeneth.Areas.Identity.Data.proyectokenethUser>
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_Success" />
+
+<div class="search-box">
+    <div class="input-group">
+        <input id="toSearch" type="text" class="form-control" placeholder="Ingrese Correo Electrónico">
+        <div class="input-group-append">
+            <button id="buttonSearch" class="btn btn-primary" type="button">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+        <div class="input-group-append">
+            <a class="btn btn-success" href="Identity/Account/Register">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <div class="spinner-border text-primary" role="status" style="display:none">
+        <span class="sr-only">Buscando...</span>
+    </div>
+</div>
+
+<div class="">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <a class="btn btn-success" title="Asignar" href="@($"Usuarios/AsignarPasos/{item.Email}")">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <a class="btn btn-danger" title="Eliminar" href="@($"Usuarios/Eliminar/{item.Email}")">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </td>
+                
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+}
+
+@section Scripts {
+
+}

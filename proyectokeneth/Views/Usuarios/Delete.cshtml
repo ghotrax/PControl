@@ -1,0 +1,28 @@
+﻿@model proyectokeneth.Areas.Identity.Data.proyectokenethUser
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Eliminar Usuario</h1>
+
+<h3>Desea eliminar el siguiente usuario?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteConfirmed">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Email" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index">Regresar</a>
+    </form>
+</div>

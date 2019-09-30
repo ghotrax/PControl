@@ -29,7 +29,8 @@ namespace proyectokeneth.Models
         public virtual DbSet<Plantillas> Plantillas { get; set; }
         public virtual DbSet<PlantillasCamposDetalle> PlantillasCamposDetalle { get; set; }
         public virtual DbSet<PlantillasPasosDetalle> PlantillasPasosDetalle { get; set; }
-       
+        public virtual DbSet<PlantillasPasosUsuariosDetalle> PlantillasPasosUsuariosDetalle { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -71,6 +72,13 @@ namespace proyectokeneth.Models
                     .IsRequired()
                     .HasColumnName("NOMBRE")
                     .HasColumnType("VARCHAR2(50)");
+
+                entity.HasData(
+                    new DatoTipo { IdDatoTipo = 1, Nombre = "Texto" },
+                    new DatoTipo { IdDatoTipo = 2, Nombre = "Fecha" },
+                    new DatoTipo { IdDatoTipo = 3, Nombre = "Entero" },
+                    new DatoTipo { IdDatoTipo = 4, Nombre = "Decimal" }
+                );
             });
 
             builder.Entity<InstanciasPlantillas>(entity =>
@@ -103,19 +111,14 @@ namespace proyectokeneth.Models
                     .HasColumnName("NOMBRE")
                     .HasColumnType("VARCHAR2(50)");
 
-                entity.Property(e => e.Usuario)
-                    .HasColumnName("USUARIO");
-
                 entity.Property(e => e.AspNetUser)
                     .IsRequired()
                     .HasColumnName("ASPNETUSER");
 
-             
-
-                  entity.HasOne(d => d.AspNetUserNavigation)
-                      .WithMany(p => p.InstanciasPlantillas)
-                      .HasForeignKey(d => d.AspNetUser)
-                      .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.AspNetUserNavigation)
+                    .WithMany(p => p.InstanciasPlantillas)
+                    .HasForeignKey(d => d.AspNetUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             builder.Entity<InstanciasPlantillasDatosDetalle>(entity =>
@@ -138,6 +141,9 @@ namespace proyectokeneth.Models
 
                 entity.Property(e => e.DatoNumerico)
                     .HasColumnName("DATO_NUMERICO");
+
+                entity.Property(e => e.DatoDecimal)
+                    .HasColumnName("DATO_DECIMAL");
 
                 entity.Property(e => e.DatoFecha)
                     .HasColumnName("DATO_FECHA");
@@ -178,9 +184,6 @@ namespace proyectokeneth.Models
                 entity.Property(e => e.Paso)
                     .HasColumnName("PASO");
 
-                entity.Property(e => e.UsuarioAccion)
-                    .HasColumnName("USUARIO_ACCION");
-
                 entity.Property(e => e.AspNetUser)
                     .IsRequired(false)
                     .HasColumnName("ASPNETUSER");
@@ -198,11 +201,9 @@ namespace proyectokeneth.Models
                     .HasForeignKey(d => d.Paso)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-               
-
-                 entity.HasOne(d => d.AspNetUserNavigation)
-                     .WithMany(p => p.InstanciasPlantillasPasosDetalle)
-                     .HasForeignKey(d => d.AspNetUser);
+                entity.HasOne(d => d.AspNetUserNavigation)
+                    .WithMany(p => p.InstanciasPlantillasPasosDetalle)
+                    .HasForeignKey(d => d.AspNetUser);
             });
 
             builder.Entity<Pasos>(entity =>
@@ -224,6 +225,12 @@ namespace proyectokeneth.Models
                     .IsRequired()
                     .HasColumnName("NOMBRE")
                     .HasColumnType("VARCHAR2(50)");
+
+                entity.Property(e => e.FechaInicio)
+                    .HasColumnName("FECHA_INICIO");
+
+                entity.Property(e => e.FechaFin)
+                    .HasColumnName("FECHA_FIN");
             });
 
             builder.Entity<PasosInstancias>(entity =>
@@ -291,9 +298,6 @@ namespace proyectokeneth.Models
                 entity.Property(e => e.PlantillaPasoDetalle)
                     .HasColumnName("PLANTILLA_PASO_DETALLE");
 
-                entity.Property(e => e.Usuario)
-                    .HasColumnName("USUARIO");
-
                 entity.Property(e => e.AspNetUser)
                     .IsRequired()
                     .HasColumnName("ASPNETUSER");
@@ -302,12 +306,10 @@ namespace proyectokeneth.Models
                     .WithMany(p => p.PasosUsuariosDetalle)
                     .HasForeignKey(d => d.PlantillaPasoDetalle);
 
-             
-
-                    entity.HasOne(d => d.AspNetUserNavigation)
-                        .WithMany(p => p.PasosUsuariosDetalle)
-                        .HasForeignKey(d => d.AspNetUser)
-                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.AspNetUserNavigation)
+                    .WithMany(p => p.PasosUsuariosDetalle)
+                    .HasForeignKey(d => d.AspNetUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             builder.Entity<Plantillas>(entity =>
@@ -333,12 +335,13 @@ namespace proyectokeneth.Models
 
             builder.Entity<PlantillasCamposDetalle>(entity =>
             {
-                entity.HasKey(e => new { e.IdPlantillaCampo, e.Plantilla });
+                entity.HasKey(e => e.IdPlantillaCampo);
 
                 entity.ToTable("PLANTILLAS_CAMPOS_DETALLE");
 
                 entity.Property(e => e.IdPlantillaCampo)
-                    .HasColumnName("ID_PLANTILLA_CAMPO");
+                    .HasColumnName("ID_PLANTILLA_CAMPO")
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.IdDatoTipo)
                     .HasColumnName("ID_DATO_TIPO");
@@ -362,12 +365,13 @@ namespace proyectokeneth.Models
 
             builder.Entity<PlantillasPasosDetalle>(entity =>
             {
-                entity.HasKey(e => new { e.IdPlantillaPaso, e.Plantilla });
+                entity.HasKey(e => e.IdPlantillaPaso);
 
                 entity.ToTable("PLANTILLAS_PASOS_DETALLE");
 
                 entity.Property(e => e.IdPlantillaPaso)
-                    .HasColumnName("ID_PLANTILLA_PASO");
+                    .HasColumnName("ID_PLANTILLA_PASO")
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Plantilla)
                     .HasColumnName("PLANTILLA");
@@ -385,9 +389,32 @@ namespace proyectokeneth.Models
                     .HasForeignKey(d => d.Plantilla);
             });
 
-         
+            builder.Entity<PlantillasPasosUsuariosDetalle>(entity =>
+            {
+                entity.HasKey(e => e.IdPlantillaPasosUsuarios);
 
-           
+                entity.ToTable("PLANTILLAS_PASOS_USUARIOS_DETALLE");
+
+                entity.Property(e => e.IdPlantillaPasosUsuarios)
+                    .HasColumnName("ID_PLANTILLAS_PASOS_USUARIOS")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.PlantillaPasoDetalle)
+                    .HasColumnName("PLANTILLA_PASO_DETALLE");
+
+                entity.Property(e => e.AspNetUser)
+                    .IsRequired()
+                    .HasColumnName("ASPNETUSER");
+
+                entity.HasOne(d => d.PlantillaPasoDetalleNavigation)
+                    .WithMany(p => p.PlantillasPasosUsuariosDetalle)
+                    .HasForeignKey(d => d.PlantillaPasoDetalle);
+
+                entity.HasOne(d => d.AspNetUserNavigation)
+                    .WithMany(p => p.PlantillasPasosUsuariosDetalle)
+                    .HasForeignKey(d => d.AspNetUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
 
             builder.HasSequence("ISEQ$$_73724");
 

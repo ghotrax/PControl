@@ -8,8 +8,8 @@ namespace proyectokeneth.Models.Entities
     {
         public Plantillas()
         {
-            PlantillasCamposDetalle = new HashSet<PlantillasCamposDetalle>();
-            PlantillasPasosDetalle = new HashSet<PlantillasPasosDetalle>();
+            PlantillasCamposDetalle = new List<PlantillasCamposDetalle>();
+            PlantillasPasosDetalle = new List<PlantillasPasosDetalle>();
         }
 
         public int IdPlantilla { get; set; }
@@ -18,7 +18,7 @@ namespace proyectokeneth.Models.Entities
         [Required]
         public string Descripcion { get; set; }
 
-        public virtual ICollection<PlantillasCamposDetalle> PlantillasCamposDetalle { get; set; }
-        public virtual ICollection<PlantillasPasosDetalle> PlantillasPasosDetalle { get; set; }
+        public virtual List<PlantillasCamposDetalle> PlantillasCamposDetalle { get; set; }
+        public virtual List<PlantillasPasosDetalle> PlantillasPasosDetalle { get; set; }
     }
 }

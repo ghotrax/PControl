@@ -11,5 +11,6 @@ namespace proyectokeneth.Models.Entities
 
         public virtual Pasos PasoNavigation { get; set; }
         public virtual Plantillas PlantillaNavigation { get; set; }
+        public virtual List<PlantillasPasosUsuariosDetalle> PlantillasPasosUsuariosDetalle { get; set; }
     }
 }

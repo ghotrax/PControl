@@ -4,7 +4,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 
 namespace proyectokeneth.Migrations
 {
-    public partial class processcontrol : Migration
+    public partial class NuevaTabla : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -113,7 +113,9 @@ namespace proyectokeneth.Migrations
                     ID_PASO = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     NOMBRE = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
-                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false)
+                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false),
+                    FECHA_INICIO = table.Column<DateTime>(nullable: false),
+                    FECHA_FIN = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,20 +148,6 @@ namespace proyectokeneth.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PLANTILLAS", x => x.ID_PLANTILLA);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RANGOS",
-                columns: table => new
-                {
-                    ID_RANGO = table.Column<int>(nullable: false)
-                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
-                    NOMBRE = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
-                    NIVEL = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RANGOS", x => x.ID_RANGO);
                 });
 
             migrationBuilder.CreateTable(
@@ -269,17 +257,41 @@ namespace proyectokeneth.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "INSTANCIAS_PLANTILLAS",
+                columns: table => new
+                {
+                    ID_INSTANCIA_PLANTILLA = table.Column<int>(nullable: false)
+                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
+                    NOMBRE = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
+                    ASPNETUSER = table.Column<string>(nullable: false),
+                    ESTADO = table.Column<string>(type: "CHAR(1)", nullable: false),
+                    INICIADA = table.Column<string>(type: "CHAR(1)", nullable: false),
+                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_INSTANCIAS_PLANTILLAS", x => x.ID_INSTANCIA_PLANTILLA);
+                    table.ForeignKey(
+                        name: "FK_INSTANCIAS_PLANTILLAS_AspNetUsers_ASPNETUSER",
+                        column: x => x.ASPNETUSER,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PLANTILLAS_CAMPOS_DETALLE",
                 columns: table => new
                 {
-                    ID_PLANTILLA_CAMPO = table.Column<int>(nullable: false),
+                    ID_PLANTILLA_CAMPO = table.Column<int>(nullable: false)
+                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     PLANTILLA = table.Column<int>(nullable: false),
                     ID_DATO_TIPO = table.Column<int>(nullable: false),
                     NOMBRE_CAMPO = table.Column<string>(type: "VARCHAR2(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PLANTILLAS_CAMPOS_DETALLE", x => new { x.ID_PLANTILLA_CAMPO, x.PLANTILLA });
+                    table.PrimaryKey("PK_PLANTILLAS_CAMPOS_DETALLE", x => x.ID_PLANTILLA_CAMPO);
                     table.ForeignKey(
                         name: "FK_PLANTILLAS_CAMPOS_DETALLE_DATO_TIPO_ID_DATO_TIPO",
                         column: x => x.ID_DATO_TIPO,
@@ -298,13 +310,14 @@ namespace proyectokeneth.Migrations
                 name: "PLANTILLAS_PASOS_DETALLE",
                 columns: table => new
                 {
-                    ID_PLANTILLA_PASO = table.Column<int>(nullable: false),
+                    ID_PLANTILLA_PASO = table.Column<int>(nullable: false)
+                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     PLANTILLA = table.Column<int>(nullable: false),
                     PASO = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PLANTILLAS_PASOS_DETALLE", x => new { x.ID_PLANTILLA_PASO, x.PLANTILLA });
+                    table.PrimaryKey("PK_PLANTILLAS_PASOS_DETALLE", x => x.ID_PLANTILLA_PASO);
                     table.ForeignKey(
                         name: "FK_PLANTILLAS_PASOS_DETALLE_PASOS_PASO",
                         column: x => x.PASO,
@@ -320,58 +333,6 @@ namespace proyectokeneth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "USUARIOS",
-                columns: table => new
-                {
-                    ID_USUARIO = table.Column<int>(nullable: false)
-                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
-                    NOMBRES = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
-                    APELLIDOS = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
-                    USUARIO_EMAIL = table.Column<string>(type: "VARCHAR2(30)", nullable: false),
-                    RANGO = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_USUARIOS", x => x.ID_USUARIO);
-                    table.ForeignKey(
-                        name: "FK_USUARIOS_RANGOS_RANGO",
-                        column: x => x.RANGO,
-                        principalTable: "RANGOS",
-                        principalColumn: "ID_RANGO",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "INSTANCIAS_PLANTILLAS",
-                columns: table => new
-                {
-                    ID_INSTANCIA_PLANTILLA = table.Column<int>(nullable: false)
-                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
-                    NOMBRE = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
-                    USUARIO = table.Column<int>(nullable: false),
-                    ASPNETUSER = table.Column<string>(nullable: false),
-                    ESTADO = table.Column<string>(type: "CHAR(1)", nullable: false),
-                    INICIADA = table.Column<string>(type: "CHAR(1)", nullable: false),
-                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_INSTANCIAS_PLANTILLAS", x => x.ID_INSTANCIA_PLANTILLA);
-                    table.ForeignKey(
-                        name: "FK_INSTANCIAS_PLANTILLAS_AspNetUsers_ASPNETUSER",
-                        column: x => x.ASPNETUSER,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_INSTANCIAS_PLANTILLAS_USUARIOS_USUARIO",
-                        column: x => x.USUARIO,
-                        principalTable: "USUARIOS",
-                        principalColumn: "ID_USUARIO",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "INSTANCIAS_PLANTILLAS_DATOS_DETALLE",
                 columns: table => new
                 {
@@ -381,8 +342,9 @@ namespace proyectokeneth.Migrations
                     ID_DATO_TIPO = table.Column<int>(nullable: false),
                     NOMBRE_CAMPO = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
                     DATO_TEXTO = table.Column<string>(type: "VARCHAR2(50)", nullable: true),
+                    DATO_FECHA = table.Column<DateTime>(nullable: true),
                     DATO_NUMERICO = table.Column<long>(nullable: true),
-                    DATO_FECHA = table.Column<DateTime>(nullable: true)
+                    DATO_DECIMAL = table.Column<decimal>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -410,7 +372,6 @@ namespace proyectokeneth.Migrations
                     INSTANCIA_PLANTILLA = table.Column<int>(nullable: false),
                     PASO = table.Column<int>(nullable: false),
                     ESTADO = table.Column<int>(nullable: true),
-                    USUARIO_ACCION = table.Column<int>(nullable: true),
                     ASPNETUSER = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -440,12 +401,32 @@ namespace proyectokeneth.Migrations
                         principalTable: "PASOS_INSTANCIAS",
                         principalColumn: "ID_PASOINSTANCIA",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PLANTILLAS_PASOS_USUARIOS_DETALLE",
+                columns: table => new
+                {
+                    ID_PLANTILLAS_PASOS_USUARIOS = table.Column<int>(nullable: false)
+                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
+                    PLANTILLA_PASO_DETALLE = table.Column<int>(nullable: false),
+                    ASPNETUSER = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PLANTILLAS_PASOS_USUARIOS_DETALLE", x => x.ID_PLANTILLAS_PASOS_USUARIOS);
                     table.ForeignKey(
-                        name: "FK_INSTANCIAS_PLANTILLAS_PASOS_DETALLE_USUARIOS_USUARIO_ACCION",
-                        column: x => x.USUARIO_ACCION,
-                        principalTable: "USUARIOS",
-                        principalColumn: "ID_USUARIO",
+                        name: "FK_PLANTILLAS_PASOS_USUARIOS_DETALLE_AspNetUsers_ASPNETUSER",
+                        column: x => x.ASPNETUSER,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PLANTILLAS_PASOS_USUARIOS_DETALLE_PLANTILLAS_PASOS_DETALLE_PLANTILLA_PASO_DETALLE",
+                        column: x => x.PLANTILLA_PASO_DETALLE,
+                        principalTable: "PLANTILLAS_PASOS_DETALLE",
+                        principalColumn: "ID_PLANTILLA_PASO",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -482,7 +463,6 @@ namespace proyectokeneth.Migrations
                     ID_PASOS_USUARIOS = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     PLANTILLA_PASO_DETALLE = table.Column<int>(nullable: false),
-                    USUARIO = table.Column<int>(nullable: false),
                     ASPNETUSER = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -500,12 +480,17 @@ namespace proyectokeneth.Migrations
                         principalTable: "INSTANCIAS_PLANTILLAS_PASOS_DETALLE",
                         principalColumn: "ID_PLANTILLA_PASO_DETALLE",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PASOS_USUARIOS_DETALLE_USUARIOS_USUARIO",
-                        column: x => x.USUARIO,
-                        principalTable: "USUARIOS",
-                        principalColumn: "ID_USUARIO",
-                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "DATO_TIPO",
+                columns: new[] { "ID_DATO_TIPO", "NOMBRE" },
+                values: new object[,]
+                {
+                    { 1, "Texto" },
+                    { 2, "Fecha" },
+                    { 3, "Entero" },
+                    { 4, "Decimal" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -551,11 +536,6 @@ namespace proyectokeneth.Migrations
                 column: "ASPNETUSER");
 
             migrationBuilder.CreateIndex(
-                name: "IX_INSTANCIAS_PLANTILLAS_USUARIO",
-                table: "INSTANCIAS_PLANTILLAS",
-                column: "USUARIO");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_INSTANCIAS_PLANTILLAS_DATOS_DETALLE_ID_DATO_TIPO",
                 table: "INSTANCIAS_PLANTILLAS_DATOS_DETALLE",
                 column: "ID_DATO_TIPO");
@@ -586,11 +566,6 @@ namespace proyectokeneth.Migrations
                 column: "PASO");
 
             migrationBuilder.CreateIndex(
-                name: "IX_INSTANCIAS_PLANTILLAS_PASOS_DETALLE_USUARIO_ACCION",
-                table: "INSTANCIAS_PLANTILLAS_PASOS_DETALLE",
-                column: "USUARIO_ACCION");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PASOS_INSTANCIAS_DATOS_DETALLE_INSTANCIA_PLANTILLA_DATO",
                 table: "PASOS_INSTANCIAS_DATOS_DETALLE",
                 column: "INSTANCIA_PLANTILLA_DATO");
@@ -609,11 +584,6 @@ namespace proyectokeneth.Migrations
                 name: "IX_PASOS_USUARIOS_DETALLE_PLANTILLA_PASO_DETALLE",
                 table: "PASOS_USUARIOS_DETALLE",
                 column: "PLANTILLA_PASO_DETALLE");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PASOS_USUARIOS_DETALLE_USUARIO",
-                table: "PASOS_USUARIOS_DETALLE",
-                column: "USUARIO");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PLANTILLAS_CAMPOS_DETALLE_ID_DATO_TIPO",
@@ -636,9 +606,14 @@ namespace proyectokeneth.Migrations
                 column: "PLANTILLA");
 
             migrationBuilder.CreateIndex(
-                name: "IX_USUARIOS_RANGO",
-                table: "USUARIOS",
-                column: "RANGO");
+                name: "IX_PLANTILLAS_PASOS_USUARIOS_DETALLE_ASPNETUSER",
+                table: "PLANTILLAS_PASOS_USUARIOS_DETALLE",
+                column: "ASPNETUSER");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PLANTILLAS_PASOS_USUARIOS_DETALLE_PLANTILLA_PASO_DETALLE",
+                table: "PLANTILLAS_PASOS_USUARIOS_DETALLE",
+                column: "PLANTILLA_PASO_DETALLE");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -668,7 +643,7 @@ namespace proyectokeneth.Migrations
                 name: "PLANTILLAS_CAMPOS_DETALLE");
 
             migrationBuilder.DropTable(
-                name: "PLANTILLAS_PASOS_DETALLE");
+                name: "PLANTILLAS_PASOS_USUARIOS_DETALLE");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -680,10 +655,7 @@ namespace proyectokeneth.Migrations
                 name: "INSTANCIAS_PLANTILLAS_PASOS_DETALLE");
 
             migrationBuilder.DropTable(
-                name: "PASOS");
-
-            migrationBuilder.DropTable(
-                name: "PLANTILLAS");
+                name: "PLANTILLAS_PASOS_DETALLE");
 
             migrationBuilder.DropTable(
                 name: "DATO_TIPO");
@@ -698,13 +670,13 @@ namespace proyectokeneth.Migrations
                 name: "PASOS_INSTANCIAS");
 
             migrationBuilder.DropTable(
+                name: "PASOS");
+
+            migrationBuilder.DropTable(
+                name: "PLANTILLAS");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "USUARIOS");
-
-            migrationBuilder.DropTable(
-                name: "RANGOS");
 
             migrationBuilder.DropSequence(
                 name: "ISEQ$$_73724");

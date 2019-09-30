@@ -1,0 +1,69 @@
+﻿@using proyectokeneth.Models.Entities
+@model proyectokeneth.Areas.Identity.Data.proyectokenethUser
+
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Asignacion de pasos</h4>
+<hr />
+<div class="">
+    <div class="">
+        <h5><strong>Usuario:</strong> @ViewData["UserName"]</h5>
+        <hr />
+        <form asp-action="AssignSteps">
+            <div id="formContent">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h5>Pasos</h5>
+                <ul>
+                    <li>Debe seleccionar cada uno de los pasos.</li>
+                    <li>No es posible seleccionar multiples veces un paso.</li>
+                </ul>
+                <div class="col-auto">
+                    <label class="control-label align-middle">Paso 1</label>
+                </div>
+                <div class="col-lg">
+                    @Html.TextBox($"CursoNombre[]", null, new { @class = "form-control", type = "text" })
+                    <div class="text-center" style="display:none">
+                        <span class="text-danger field-validation-valid align-middle">Sin Resultados</span>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label class="control-label align-middle">Paso 2</label>
+                </div>
+                <div class="col-lg">
+                    @Html.TextBox($"CursoNombre[]", null, new { @class = "form-control", type = "text" })
+                    <div class="text-center" style="display:none">
+                        <span class="text-danger field-validation-valid align-middle">Sin Resultados</span>
+                    </div>
+                </div>
+                <div class="form-group mt-3">
+                    <input id="mainInput" type="submit" value="Asignar Pasos" class="btn btn-primary" />
+                </div>
+            </div>
+            <div id="mainLoader" class="spinner-border text-primary" role="status" style="display:none">
+                <span class="sr-only">Cargando...</span>
+            </div>
+        </form>
+        <div id="errorMessageDiv" style="display:none">
+            <p id="errorMessage" class="text-danger">Ha ocurrido un error.</p>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Regresar</a>
+</div>
+
+@section Styles {
+}
+
+@section Scripts {
+
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

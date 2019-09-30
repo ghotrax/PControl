@@ -15,13 +15,12 @@ namespace proyectokeneth.Models.Entities
 
         public int IdInstanciaPlantilla { get; set; }
         public string Nombre { get; set; }
-        public int Usuario { get; set; }
         public string AspNetUser { get; set; }
         public string Estado { get; set; }
         public string Iniciada { get; set; }
         public string Descripcion { get; set; }
 
-      
+
         public virtual proyectokenethUser AspNetUserNavigation { get; set; }
         public virtual ICollection<InstanciasPlantillasDatosDetalle> InstanciasPlantillasDatosDetalle { get; set; }
         public virtual ICollection<InstanciasPlantillasPasosDetalle> InstanciasPlantillasPasosDetalle { get; set; }

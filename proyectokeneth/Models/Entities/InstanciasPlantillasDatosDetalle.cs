@@ -15,8 +15,9 @@ namespace proyectokeneth.Models.Entities
         public int IdDatoTipo { get; set; }
         public string NombreCampo { get; set; }
         public string DatoTexto { get; set; }
-        public long? DatoNumerico { get; set; }
         public DateTime? DatoFecha { get; set; }
+        public long? DatoNumerico { get; set; }
+        public decimal? DatoDecimal { get; set; }
 
         public virtual InstanciasPlantillas InstanciaplantillaNavigation { get; set; }
         public virtual DatoTipo IdDatoTipoNavigation { get; set; }

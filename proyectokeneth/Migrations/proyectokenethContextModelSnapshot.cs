@@ -217,6 +217,28 @@ namespace proyectokeneth.Migrations
                     b.HasKey("IdDatoTipo");
 
                     b.ToTable("DATO_TIPO");
+
+                    b.HasData(
+                        new
+                        {
+                            IdDatoTipo = 1,
+                            Nombre = "Texto"
+                        },
+                        new
+                        {
+                            IdDatoTipo = 2,
+                            Nombre = "Fecha"
+                        },
+                        new
+                        {
+                            IdDatoTipo = 3,
+                            Nombre = "Entero"
+                        },
+                        new
+                        {
+                            IdDatoTipo = 4,
+                            Nombre = "Decimal"
+                        });
                 });
 
             modelBuilder.Entity("proyectokeneth.Models.Entities.InstanciasPlantillas", b =>
@@ -249,9 +271,6 @@ namespace proyectokeneth.Migrations
                         .HasColumnName("NOMBRE")
                         .HasColumnType("VARCHAR2(50)");
 
-                    b.Property<int>("Usuario")
-                        .HasColumnName("USUARIO");
-
                     b.HasKey("IdInstanciaPlantilla");
 
                     b.HasIndex("AspNetUser");
@@ -264,6 +283,9 @@ namespace proyectokeneth.Migrations
                     b.Property<int>("IdInstanciaPlantillaDato")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ID_INSTANCIA_PLANTILLA_DATO");
+
+                    b.Property<decimal?>("DatoDecimal")
+                        .HasColumnName("DATO_DECIMAL");
 
                     b.Property<DateTime?>("DatoFecha")
                         .HasColumnName("DATO_FECHA");
@@ -313,9 +335,6 @@ namespace proyectokeneth.Migrations
                     b.Property<int>("Paso")
                         .HasColumnName("PASO");
 
-                    b.Property<int?>("UsuarioAccion")
-                        .HasColumnName("USUARIO_ACCION");
-
                     b.HasKey("IdPlantillaPasoDetalle");
 
                     b.HasIndex("AspNetUser");
@@ -339,6 +358,12 @@ namespace proyectokeneth.Migrations
                         .IsRequired()
                         .HasColumnName("DESCRIPCION")
                         .HasColumnType("VARCHAR2(100)");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnName("FECHA_FIN");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnName("FECHA_INICIO");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -410,9 +435,6 @@ namespace proyectokeneth.Migrations
                     b.Property<int>("PlantillaPasoDetalle")
                         .HasColumnName("PLANTILLA_PASO_DETALLE");
 
-                    b.Property<int>("Usuario")
-                        .HasColumnName("USUARIO");
-
                     b.HasKey("IdPasosUsuarios");
 
                     b.HasIndex("AspNetUser");
@@ -446,10 +468,8 @@ namespace proyectokeneth.Migrations
             modelBuilder.Entity("proyectokeneth.Models.Entities.PlantillasCamposDetalle", b =>
                 {
                     b.Property<int>("IdPlantillaCampo")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("ID_PLANTILLA_CAMPO");
-
-                    b.Property<int>("Plantilla")
-                        .HasColumnName("PLANTILLA");
 
                     b.Property<int>("IdDatoTipo")
                         .HasColumnName("ID_DATO_TIPO");
@@ -459,7 +479,10 @@ namespace proyectokeneth.Migrations
                         .HasColumnName("NOMBRE_CAMPO")
                         .HasColumnType("VARCHAR2(50)");
 
-                    b.HasKey("IdPlantillaCampo", "Plantilla");
+                    b.Property<int>("Plantilla")
+                        .HasColumnName("PLANTILLA");
+
+                    b.HasKey("IdPlantillaCampo");
 
                     b.HasIndex("IdDatoTipo");
 
@@ -471,21 +494,44 @@ namespace proyectokeneth.Migrations
             modelBuilder.Entity("proyectokeneth.Models.Entities.PlantillasPasosDetalle", b =>
                 {
                     b.Property<int>("IdPlantillaPaso")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("ID_PLANTILLA_PASO");
-
-                    b.Property<int>("Plantilla")
-                        .HasColumnName("PLANTILLA");
 
                     b.Property<int>("Paso")
                         .HasColumnName("PASO");
 
-                    b.HasKey("IdPlantillaPaso", "Plantilla");
+                    b.Property<int>("Plantilla")
+                        .HasColumnName("PLANTILLA");
+
+                    b.HasKey("IdPlantillaPaso");
 
                     b.HasIndex("Paso");
 
                     b.HasIndex("Plantilla");
 
                     b.ToTable("PLANTILLAS_PASOS_DETALLE");
+                });
+
+            modelBuilder.Entity("proyectokeneth.Models.Entities.PlantillasPasosUsuariosDetalle", b =>
+                {
+                    b.Property<int>("IdPlantillaPasosUsuarios")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ID_PLANTILLAS_PASOS_USUARIOS");
+
+                    b.Property<string>("AspNetUser")
+                        .IsRequired()
+                        .HasColumnName("ASPNETUSER");
+
+                    b.Property<int>("PlantillaPasoDetalle")
+                        .HasColumnName("PLANTILLA_PASO_DETALLE");
+
+                    b.HasKey("IdPlantillaPasosUsuarios");
+
+                    b.HasIndex("AspNetUser");
+
+                    b.HasIndex("PlantillaPasoDetalle");
+
+                    b.ToTable("PLANTILLAS_PASOS_USUARIOS_DETALLE");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -619,6 +665,18 @@ namespace proyectokeneth.Migrations
                     b.HasOne("proyectokeneth.Models.Entities.Plantillas", "PlantillaNavigation")
                         .WithMany("PlantillasPasosDetalle")
                         .HasForeignKey("Plantilla")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("proyectokeneth.Models.Entities.PlantillasPasosUsuariosDetalle", b =>
+                {
+                    b.HasOne("proyectokeneth.Areas.Identity.Data.proyectokenethUser", "AspNetUserNavigation")
+                        .WithMany("PlantillasPasosUsuariosDetalle")
+                        .HasForeignKey("AspNetUser");
+
+                    b.HasOne("proyectokeneth.Models.Entities.PlantillasPasosDetalle", "PlantillaPasoDetalleNavigation")
+                        .WithMany("PlantillasPasosUsuariosDetalle")
+                        .HasForeignKey("PlantillaPasoDetalle")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
