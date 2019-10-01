@@ -139,6 +139,7 @@ namespace proyectokeneth.Controllers
                 _context.Add(plantillas);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Plantilla creada exitosamente";
+                ViewBag.message = "Success";
                 return RedirectToAction(nameof(Index));
             }
             SetupCreateViewBag();

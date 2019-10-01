@@ -8,7 +8,7 @@
 
 <partial name="_Success" />
 
-<div class="search-box">
+<!--<div class="search-box">
     <div class="input-group">
         <input id="toSearch" type="text" class="form-control" placeholder="Ingrese Correo Electrónico">
         <div class="input-group-append">
@@ -16,12 +16,21 @@
                 <i class="fa fa-search"></i>
             </button>
         </div>
-        <div class="input-group-append">
-            <a class="btn btn-success" href="Identity/Account/Register">
-                <i class="fa fa-plus"></i>
-            </a>
-        </div>
     </div>
+</div> -->
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red z-depth-5">
+        <i class="large material-icons">+</i>
+    </a>
+    <ul>
+        <li>
+            <a id="anchorCreate" class="btn-floating green" href="Identity/Account/Register">
+                <i class="material-icons">REG</i>
+            </a>
+        </li>
+
+
+    </ul>
 </div>
 
 <div class="text-center">
@@ -67,5 +76,10 @@
 }
 
 @section Scripts {
+<script>
+       $(document).ready(function () {
+            $('.fixed-action-btn').floatingActionButton();
+        });
+</script>
 
 }

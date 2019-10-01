@@ -22,34 +22,65 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+  <!--  <header>
+        <nav>
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PC CONTROL</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <div class="nav-wrapper">
                     <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                    <ul class="left hide-on-med-and-down">
+                        <li class="nav-wrapper">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Plantillas" asp-action="Index">Plantillas</a>
+                                <a asp-area="" asp-controller="Plantillas" asp-action="Index">Plantillas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                <a asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                             </li>
                         }
                     </ul>
                 </div>
             </div>
         </nav>
+    </header> -->
+    <header>
+        <nav class="nav-extended card-panel teal deep-orange lighten-2" >
+            <div class="nav-wrapper">
+                <a class="brand-logo" asp-area="" asp-controller="Home" asp-action="Index">PC CONTROL</a>
+
+
+                <ul class="right hide-on-med-and-down">
+                    <partial name="_LoginPartial" />
+                </ul>
+
+            </div>
+            <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab" >
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                    </li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="tab">
+                            <a asp-area="" asp-controller="Plantillas" asp-action="Index">Plantillas</a>
+                        </li>
+                        <li class="tab">
+                            <a asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+        </nav>
     </header>
+
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">

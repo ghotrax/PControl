@@ -1,14 +1,20 @@
 ﻿@model IEnumerable<proyectokeneth.Models.Entities.Plantillas>
 
+
 @{
     ViewData["Title"] = "Plantillas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@ViewData["Title"]</h1>
+
+
+
+<div class="col grid-example s12">
+    <span class="flow-text deep-orange lighten-2">@ViewData["Title"]</span>
+</div>
 
 <partial name="_Success" />
 <partial name="_Warning" />
-
+<!--
 <div class="search-box">
     <div class="input-group">
         <input id="toSearch" type="text" class="form-control w-50" placeholder="Ingrese nombre a buscar">
@@ -17,21 +23,34 @@
                 <i class="fa fa-search"></i>
             </button>
         </div>
-        
+
         <div class="input-group-append">
-            <a id="anchorCreate" class="btn btn-success" href="/Plantillas/Create">
-                <i class="fa fa-plus"></i>
-            </a>
+
         </div>
     </div>
 </div>
+-->
 <div class="text-center">
     <div class="spinner-border text-primary" role="status" style="display:none">
         <span class="sr-only">Buscando...</span>
     </div>
 </div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red z-depth-5">
+        <i class="large material-icons">+</i>
+    </a>
+    <ul>
+        <li>
+            <a id="anchorCreate" class="btn-floating green" href="/Plantillas/Create">
+                <i class="material-icons">crear</i>
+            </a>
+        </li>
 
-<div class="table-responsive">
+
+    </ul>
+</div>
+
+<!-- <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
@@ -61,8 +80,40 @@
             }
         </tbody>
     </table>
-</div>
+</div>-->
 
+<div class="row">
+    <div class="col s12 m6">
+        @{var i = 0; }
+
+
+        @foreach (var item in Model)
+        {
+
+
+            <div class="card">
+                <div>
+                    <p>Plantilla #@(i + 1)</p>
+
+                    <p class="card-title">@Html.DisplayNameFor(model => model.Nombre)<p />
+
+                    <p>
+
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </p>
+
+                    <a class="btn-floating halfway-fab waves-effect waves-light red" onclick="openModal(@item.IdPlantilla, '@item.Nombre')"><i class="material-icons">Acciones</i></a>
+                </div>
+                <div class="card-content">
+                    <p>  @Html.DisplayNameFor(model => model.Descripcion)</p>
+                    <p>  @Html.DisplayFor(modelItem => item.Descripcion)</p>
+                </div>
+            </div>
+            i++;
+        }
+    </div>
+</div>
+<!--
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -87,6 +138,19 @@
             </div>
         </div>
     </div>
+</div>-->
+<!-- Modal Structure -->
+<div id="modal1" class="modal bottom-sheet">
+    <div class="modal-content">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <a id="anchorEdit" class="btn btn-primary" href="">Editar</a>
+        <a id="anchorDetails" class="btn btn-primary" href="">Detalles</a>
+        <a id="anchorDelete" class="btn btn-danger" href="">Eliminar</a>
+
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
+    </div>
 </div>
 
 @section Styles {
@@ -96,11 +160,14 @@
 @section Scripts {
     <script>
         function openModal(id, name) {
+
             $("#anchorEdit").attr("href", "/Plantillas/Edit/" + id);
             $("#anchorDetails").attr("href", "/Plantillas/Details/" + id);
             $("#anchorDelete").attr("href", "/Plantillas/Delete/" + id);
-            $("#modalTitle").text("Acciones (" + name + ")");
-            $("#modal").modal("show");
+            $("#modalTitle").text("Opciones de plantilla(" + name + ")");
+            $('#modal1').modal('open');
+
+
         }
         var _defLink = "/Plantillas/Create/"
         var _link = "";
@@ -111,6 +178,12 @@
         $("#fields").change(function () {
             _link = _defLink + $("#steps").val() + "/" + $(this).val();
             $("#anchorCreate").attr("href", _link);
+        });
+        $(document).ready(function () {
+            $('.fixed-action-btn').floatingActionButton();
+        });
+        $(document).ready(function () {
+            $('.modal').modal();
         });
     </script>
 }
