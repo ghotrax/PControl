@@ -1,31 +1,81 @@
 ﻿@model proyectokeneth.Models.Entities.Plantillas
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h1>@ViewData["Title"]</h1>
 
 <div>
     <h4>Plantillas</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
+    <dl class="row">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
-        <dd>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nombre)
         </dd>
-        <dt>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
-        <dd>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
     </dl>
+    <hr />
+    <p>Pasos</p>
+    @for (int i = 0; i < Model.PlantillasPasosDetalle.Count; i++)
+    {
+        <dl class="row">
+            <dt class="col-sm-2">
+                Paso #@(i + 1)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.PlantillasPasosDetalle[i].PasoNavigation.Nombre
+            </dd>
+            <dt class="col-sm-2">
+                Descripcion
+            </dt>
+            <dd class="col-sm-10">
+                @Model.PlantillasPasosDetalle[i].PasoNavigation.Descripcion
+            </dd>
+            <dt class="col-sm-2">
+                Usuarios
+            </dt>
+            @for (int j = 0; j < Model.PlantillasPasosDetalle[i].PlantillasPasosUsuariosDetalle.Count; j++)
+            {
+                <dd class="col-sm-10">
+                    #@(j + 1) @Model.PlantillasPasosDetalle[i].PlantillasPasosUsuariosDetalle[j].AspNetUserNavigation.UserName
+                </dd>
+            }
+        </dl>
+    }
+    <hr />
+    <p>Campos</p>
+    @for (int i = 0; i < Model.PlantillasCamposDetalle.Count; i++)
+    {
+        <dl class="row">
+            <dt class="col-sm-2">
+                Campo #@(i + 1)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.PlantillasCamposDetalle[i].NombreCampo
+            </dd>
+            <dt class="col-sm-2">
+                Tipo
+            </dt>
+            <dd class="col-sm-10">
+                @Model.PlantillasCamposDetalle[i].IdDatoTipoNavigation.Nombre
+            </dd>
+        </dl>
+    }
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.IdPlantilla">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="Instance">
+        <input type="hidden" asp-for="IdPlantilla"  />
+        <input type="submit" value="Instanciar" class="btn btn-success" /> |
+        <a asp-action="Index">Regresar</a>
+    </form>
 </div>

@@ -56,6 +56,12 @@ namespace proyectokeneth.Models
                     .IsRequired()
                     .HasColumnName("NOMBRE")
                     .HasColumnType("VARCHAR2(30)");
+
+                entity.HasData(
+                    new Acciones { IdAccion = 1, Nombre = "En Espera" },
+                    new Acciones { IdAccion = 2, Nombre = "Iniciado" },
+                    new Acciones { IdAccion = 3, Nombre = "Finalizado" }
+                );
             });
 
             builder.Entity<DatoTipo>(entity =>
@@ -114,6 +120,9 @@ namespace proyectokeneth.Models
                 entity.Property(e => e.AspNetUser)
                     .IsRequired()
                     .HasColumnName("ASPNETUSER");
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnName("FECHA");
 
                 entity.HasOne(d => d.AspNetUserNavigation)
                     .WithMany(p => p.InstanciasPlantillas)

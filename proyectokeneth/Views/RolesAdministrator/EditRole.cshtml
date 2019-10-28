@@ -1,0 +1,50 @@
+﻿@model EditRoleViewModel
+   
+
+
+@{
+     ViewData["Title"] = "Editar Rol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="id" class="control-label"></label>
+            <input asp-for="id" disabled class="form-control" />
+
+        </div>
+        <div class="form-group">
+            <label asp-for="RoleName" class="control-label"></label>
+            <input asp-for="RoleName" class="form-control" />
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default">GUARDAR</button>
+            <a asp-action="ListRole" class="btn btn-default">CANCELAR</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>USUARIOS EN ESTE ROL</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Users.Any())
+                {
+                    foreach (var user in Model.Users)
+                    {
+                        <h5 class="card-title">@user</h5>
+                    }
+                }
+                else
+                {
+                    <h5 class="card-title">NO HAY USUARIOS ASIGNADOS A ESTE ROL</h5>
+                }
+            </div>
+            <div class="card-footer">
+                <a asp-action="EditUserInRole" asp-controller="RolesAdministrator" asp-route-roleId="@Model.id" class="btn btn-primary" style="width:auto">AGREGAR USUARIO</a>
+                <a href="#" class="btn btn-primary" style="width:auto">ELIMINAR USUARIO</a>
+            </div>
+        </div>
+    </form>
+
+

@@ -1,0 +1,83 @@
+﻿@model proyectokeneth.Models.Entities.PasosUsuariosDetalle
+
+@{
+    ViewData["Title"] = "Gestion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Mis pasos</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ManageUserSteps">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdPasosUsuarios" />
+            <input type="hidden" asp-for="PlantillaPasoDetalle" />
+            <input type="hidden" asp-for="AspNetUser" />
+            <h4>@Model.PlantillaPasoDetalleNavigation.PasoNavigation.Nombre</h4>
+            <h5>@Model.PlantillaPasoDetalleNavigation.PasoNavigation.Descripcion</h5>
+            <div class="form-group">
+                <label asp-for="@Model.PlantillaPasoDetalleNavigation.Estado" class="control-label"></label>
+                <select asp-for="@Model.PlantillaPasoDetalleNavigation.Estado" class="form-control" asp-items="ViewBag.Status"></select>
+                <span asp-validation-for="@Model.PlantillaPasoDetalleNavigation.Estado" class="text-danger"></span>
+            </div>
+            @for (int i = 0; i < Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle.Count; i++)
+            {
+                <input type="hidden" asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].IdPasosInstanciasDatos" />
+                <input type="hidden" asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.NombreCampo" />
+                <input type="hidden" asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipo" />
+                <input type="hidden" asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.IdDatoTipo" />
+                <input type="hidden" asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.Nombre" />
+                <hr />
+                <p>Paso #@(i + 1)</p>
+                <div class="form-group">
+                    <p>@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.NombreCampo</p>
+                    @if (Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.Nombre ==
+                      "Texto")
+                    {
+                        <input asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoTexto" class="form-control" />
+                        <span asp-validation-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoTexto" class="text-danger"></span>
+                    }
+                    else if (Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.Nombre ==
+                        "Fecha")
+                    {
+                        <input asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoFecha" class="form-control" />
+                        <span asp-validation-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoFecha" class="text-danger"></span>
+                    }
+                    else if (Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.Nombre ==
+                        "Entero")
+                    {
+                        <input asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoNumerico" class="form-control" />
+                        <span asp-validation-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoNumerico" class="text-danger"></span>
+                    }
+                    else if (Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.IdDatoTipoNavigation.Nombre ==
+                        "Decimal")
+                    {
+                        <input asp-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoDecimal" class="form-control" />
+                        <span asp-validation-for="@Model.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle[i].InstanciaPlantillaDatoNavigation.DatoDecimal" class="text-danger"></span>
+                    }
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Actualizar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Steps">Regresar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   
+<script>
+      $(document).ready(function(){
+    $('select').formSelect();
+  });
+</script>
+
+}

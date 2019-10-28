@@ -1,0 +1,68 @@
+﻿@model proyectokeneth.Models.InstanceAssignmentViewModel
+
+@{
+    ViewData["Title"] = "Asignar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Asignando</h1>
+
+<h4>Asignacion de Campos y Pasos</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Assign">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Name" />
+            <h5>Instancia de: @Model.Name</h5>
+          
+
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large red">
+                    <i class="large material-icons">+</i>
+                </a>
+                <ul>
+                    <input class="btn-floating green"  type="submit"  value="+" formmethod="post" formaction="/InstanciasPlantillas/AddAssignment"/><i class="material-icons"></i>
+    
+                </ul>
+            </div>
+
+
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <hr />
+                <p>Asignacion #@(i + 1)</p>
+                <div class="form-group">
+                    <label asp-for="@Model.Items[i].Paso" class="control-label"></label>
+                    <select asp-for="@Model.Items[i].Paso" class="form-control" asp-items="ViewBag.Steps"></select>
+                    <span asp-validation-for="@Model.Items[i].Paso" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Items[i].InstanciaPlantillaDato" class="control-label"></label>
+                    <select asp-for="@Model.Items[i].InstanciaPlantillaDato" class="form-control" asp-items="ViewBag.Fields"></select>
+                    <span asp-validation-for="@Model.Items[i].InstanciaPlantillaDato" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="@ViewData["Title"]" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+      $(document).ready(function(){
+          $('select').formSelect();
+          $('.fixed-action-btn').floatingActionButton();
+      });
+
+</script>
+}

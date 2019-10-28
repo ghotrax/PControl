@@ -10,8 +10,8 @@ using proyectokeneth.Models;
 namespace proyectokeneth.Migrations
 {
     [DbContext(typeof(proyectokenethContext))]
-    [Migration("20190926204946_NuevaTabla")]
-    partial class NuevaTabla
+    [Migration("20191024034609_Ndb")]
+    partial class Ndb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -203,6 +203,23 @@ namespace proyectokeneth.Migrations
                     b.HasKey("IdAccion");
 
                     b.ToTable("ACCIONES");
+
+                    b.HasData(
+                        new
+                        {
+                            IdAccion = 1,
+                            Nombre = "En Espera"
+                        },
+                        new
+                        {
+                            IdAccion = 2,
+                            Nombre = "Iniciado"
+                        },
+                        new
+                        {
+                            IdAccion = 3,
+                            Nombre = "Finalizado"
+                        });
                 });
 
             modelBuilder.Entity("proyectokeneth.Models.Entities.DatoTipo", b =>
@@ -262,6 +279,9 @@ namespace proyectokeneth.Migrations
                         .IsRequired()
                         .HasColumnName("ESTADO")
                         .HasColumnType("CHAR(1)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnName("FECHA");
 
                     b.Property<string>("Iniciada")
                         .IsRequired()
@@ -361,10 +381,10 @@ namespace proyectokeneth.Migrations
                         .HasColumnName("DESCRIPCION")
                         .HasColumnType("VARCHAR2(100)");
 
-                    b.Property<DateTime>("FechaFin")
+                    b.Property<DateTime?>("FechaFin")
                         .HasColumnName("FECHA_FIN");
 
-                    b.Property<DateTime>("FechaInicio")
+                    b.Property<DateTime?>("FechaInicio")
                         .HasColumnName("FECHA_INICIO");
 
                     b.Property<string>("Nombre")

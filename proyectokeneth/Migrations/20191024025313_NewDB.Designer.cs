@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using proyectokeneth.Models;
@@ -9,9 +10,10 @@ using proyectokeneth.Models;
 namespace proyectokeneth.Migrations
 {
     [DbContext(typeof(proyectokenethContext))]
-    partial class proyectokenethContextModelSnapshot : ModelSnapshot
+    [Migration("20191024025313_NewDB")]
+    partial class NewDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,23 +203,6 @@ namespace proyectokeneth.Migrations
                     b.HasKey("IdAccion");
 
                     b.ToTable("ACCIONES");
-
-                    b.HasData(
-                        new
-                        {
-                            IdAccion = 1,
-                            Nombre = "En Espera"
-                        },
-                        new
-                        {
-                            IdAccion = 2,
-                            Nombre = "Iniciado"
-                        },
-                        new
-                        {
-                            IdAccion = 3,
-                            Nombre = "Finalizado"
-                        });
                 });
 
             modelBuilder.Entity("proyectokeneth.Models.Entities.DatoTipo", b =>
@@ -278,8 +263,7 @@ namespace proyectokeneth.Migrations
                         .HasColumnName("ESTADO")
                         .HasColumnType("CHAR(1)");
 
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnName("FECHA");
+                    b.Property<DateTime>("Fecha");
 
                     b.Property<string>("Iniciada")
                         .IsRequired()

@@ -97,10 +97,14 @@
 
                     <p class="card-title">@Html.DisplayNameFor(model => model.Nombre)<p />
 
+                 
+
+
                     <p>
 
                         @Html.DisplayFor(modelItem => item.Nombre)
                     </p>
+
 
                     <a class="btn-floating halfway-fab waves-effect waves-light red" onclick="openModal(@item.IdPlantilla, '@item.Nombre')"><i class="material-icons">Acciones</i></a>
                 </div>
@@ -146,6 +150,8 @@
         <a id="anchorEdit" class="btn btn-primary" href="">Editar</a>
         <a id="anchorDetails" class="btn btn-primary" href="">Detalles</a>
         <a id="anchorDelete" class="btn btn-danger" href="">Eliminar</a>
+        <a id="anchorInstance" class="btn btn-danger" href="">Instanciar</a>
+
 
     </div>
     <div class="modal-footer">
@@ -164,6 +170,8 @@
             $("#anchorEdit").attr("href", "/Plantillas/Edit/" + id);
             $("#anchorDetails").attr("href", "/Plantillas/Details/" + id);
             $("#anchorDelete").attr("href", "/Plantillas/Delete/" + id);
+            $("#anchorInstance").attr("href", "/Plantillas/Instance/" + id);
+
             $("#modalTitle").text("Opciones de plantilla(" + name + ")");
             $('#modal1').modal('open');
 

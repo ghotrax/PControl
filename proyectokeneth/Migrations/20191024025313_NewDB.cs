@@ -4,7 +4,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 
 namespace proyectokeneth.Migrations
 {
-    public partial class NuevaTabla : Migration
+    public partial class NewDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -114,8 +114,8 @@ namespace proyectokeneth.Migrations
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     NOMBRE = table.Column<string>(type: "VARCHAR2(50)", nullable: false),
                     DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false),
-                    FECHA_INICIO = table.Column<DateTime>(nullable: false),
-                    FECHA_FIN = table.Column<DateTime>(nullable: false)
+                    FECHA_INICIO = table.Column<DateTime>(nullable: true),
+                    FECHA_FIN = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -266,7 +266,8 @@ namespace proyectokeneth.Migrations
                     ASPNETUSER = table.Column<string>(nullable: false),
                     ESTADO = table.Column<string>(type: "CHAR(1)", nullable: false),
                     INICIADA = table.Column<string>(type: "CHAR(1)", nullable: false),
-                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false)
+                    DESCRIPCION = table.Column<string>(type: "VARCHAR2(100)", nullable: false),
+                    Fecha = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

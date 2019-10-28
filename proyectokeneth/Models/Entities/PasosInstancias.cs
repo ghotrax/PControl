@@ -8,7 +8,7 @@ namespace proyectokeneth.Models.Entities
         public PasosInstancias()
         {
             InstanciasPlantillasPasosDetalle = new HashSet<InstanciasPlantillasPasosDetalle>();
-            PasosInstanciasDatosDetalle = new HashSet<PasosInstanciasDatosDetalle>();
+            PasosInstanciasDatosDetalle = new List<PasosInstanciasDatosDetalle>();
         }
 
         public string Nombre { get; set; }
@@ -16,6 +16,6 @@ namespace proyectokeneth.Models.Entities
         public int IdPasoinstancia { get; set; }
 
         public virtual ICollection<InstanciasPlantillasPasosDetalle> InstanciasPlantillasPasosDetalle { get; set; }
-        public virtual ICollection<PasosInstanciasDatosDetalle> PasosInstanciasDatosDetalle { get; set; }
+        public virtual List<PasosInstanciasDatosDetalle> PasosInstanciasDatosDetalle { get; set; }
     }
 }

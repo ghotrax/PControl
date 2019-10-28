@@ -1,0 +1,16 @@
+﻿
+@model proyectokeneth.Models.Entities.Plantillas
+@{
+    ViewData["Title"] = "InstanciarPlantilla";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>InstancearPlantilla</h2>
+<div>
+    <form asp-action="Instance">
+        <input type="hidden" asp-for="IdPlantilla" value="@Model.IdPlantilla"  />
+        <input type="submit" value="Instanciar" class="btn btn-success" /> |
+        <a asp-action="Index">Regresar</a>
+    </form>
+</div>
+

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +14,7 @@ using proyectokeneth.Models.Entities;
 
 namespace proyectokeneth.Controllers
 {
+    [Authorize]
     public class PlantillasController : Controller
     {
         private readonly proyectokenethContext _context;
@@ -22,7 +25,11 @@ namespace proyectokeneth.Controllers
             _context = context;
             _userManager = userManager;
         }
-
+        public async Task<IActionResult> InstanciarPlantilla(int id)
+        {
+            var model = new Plantillas { IdPlantilla = id };
+            return View(model);
+        }
         // GET: Plantillas
         public async Task<IActionResult> Index()
         {
@@ -79,24 +86,6 @@ namespace proyectokeneth.Controllers
             SetupCreateViewBag();
             return View(model);
         }
-        [HttpPost]
-        [Route("Plantillas/AddUser/{step}")]
-        public IActionResult AddUser(Plantillas plantilla, int step)
-        {
-            if (plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle == null)
-            {
-                plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle = new List<PlantillasPasosUsuariosDetalle>
-                {
-                    new PlantillasPasosUsuariosDetalle()
-                };
-            }
-            else
-            {
-                plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle.Add(new PlantillasPasosUsuariosDetalle());
-            }
-            SetupCreateViewBag();
-            return View(nameof(Create), plantilla);
-        }
 
         [HttpPost]
         [Route("Plantillas/AddStep")]
@@ -118,7 +107,14 @@ namespace proyectokeneth.Controllers
             return View(nameof(Create), plantilla);
         }
 
-    
+        [HttpPost]
+        [Route("Plantillas/AddUser/{step}")]
+        public IActionResult AddUser(Plantillas plantilla, int step)
+        {
+            plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle.Add(new PlantillasPasosUsuariosDetalle());
+            SetupCreateViewBag();
+            return View(nameof(Create), plantilla);
+        }
 
         // POST: Plantillas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -130,16 +126,9 @@ namespace proyectokeneth.Controllers
         {
             if (ModelState.IsValid)
             {
-                foreach (var item in plantillas.PlantillasPasosDetalle)
-                {
-                    item.PasoNavigation.FechaFin = DateTime.Parse(item.PasoNavigation.FechaFinString);
-                    item.PasoNavigation.FechaInicio = DateTime.Parse(item.PasoNavigation.FechaInicioString);
-                }
-
                 _context.Add(plantillas);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Plantilla creada exitosamente";
-                ViewBag.message = "Success";
                 return RedirectToAction(nameof(Index));
             }
             SetupCreateViewBag();
@@ -236,11 +225,12 @@ namespace proyectokeneth.Controllers
         {
             return _context.Plantillas.Any(e => e.IdPlantilla == id);
         }
-        /*
-        [HttpPost]
-        [Route("Plantillas/Instance")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Instance(int IdPlantilla)
+
+        //[HttpPost]
+      //  [Authorize(Roles = "Administrador")]
+        [Route("Plantillas/Instance/{id}")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Instance(int id)
         {
             var plantilla = await _context.Plantillas
                 .Include(p => p.PlantillasPasosDetalle)
@@ -250,7 +240,7 @@ namespace proyectokeneth.Controllers
                         .ThenInclude(p => p.AspNetUserNavigation)
                 .Include(p => p.PlantillasCamposDetalle)
                     .ThenInclude(p => p.IdDatoTipoNavigation)
-                .FirstOrDefaultAsync(m => m.IdPlantilla == IdPlantilla);
+                .FirstOrDefaultAsync(m => m.IdPlantilla == id);
             if (plantilla == null)
             {
                 return NotFound();
@@ -311,9 +301,8 @@ namespace proyectokeneth.Controllers
             _context.Add(instance);
             await _context.SaveChangesAsync();
 
-            //TempData["Success"] = "Plantilla instanciada exitosamente.";
-          //  return RedirectToAction(nameof(InstanciasPlantillasController.Assign), nameof(InstanciasPlantillas), new { id = instance.IdInstanciaPlantilla });
+            TempData["Success"] = "Plantilla instanciada exitosamente.";
+            return RedirectToAction(nameof(InstanciasPlantillasController.Assign), nameof(InstanciasPlantillas), new { id = instance.IdInstanciaPlantilla });
         }
-        */
     }
 }

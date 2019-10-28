@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyectokeneth.Areas.Identity.Data;
 using proyectokeneth.Models;
+using proyectokeneth.Models.Entities;
 
 namespace proyectokeneth.Controllers
 {
@@ -35,6 +37,77 @@ namespace proyectokeneth.Controllers
                 .Take(30)
                 .ToListAsync();
             return View(users.OrderBy(u => u.Email));
+        }
+
+        [HttpGet]
+        [Route("Usuarios/MisPasos")]
+        public async Task<IActionResult> Steps()
+        {
+            var steps = await _context.PasosUsuariosDetalle
+                .Include(p => p.PlantillaPasoDetalleNavigation)
+                    .ThenInclude(p => p.PasoNavigation)
+                .Include(p => p.PlantillaPasoDetalleNavigation)
+                    .ThenInclude(p => p.EstadoNavigation)
+                .Where(p => p.AspNetUser == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .ToListAsync();
+            return View(steps);
+        }
+
+        [HttpGet]
+        [Route("Usuarios/MisPasos/Gestionar/{id}")]
+        public async Task<IActionResult> ManageUserSteps(int id)
+        {
+            ViewData["Status"] = new SelectList(_context.Acciones, "IdAccion", "Nombre");
+            var model = await _context.PasosUsuariosDetalle
+                .Include(p => p.PlantillaPasoDetalleNavigation)
+                    .ThenInclude(p => p.PasoNavigation)
+                        .ThenInclude(p => p.PasosInstanciasDatosDetalle)
+                            .ThenInclude(p => p.InstanciaPlantillaDatoNavigation)
+                                .ThenInclude(p => p.IdDatoTipoNavigation)
+                .Where(p => p.IdPasosUsuarios == id)
+                .FirstOrDefaultAsync();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Usuarios/MisPasos/Gestionar/{id}")]
+        public async Task<IActionResult> ManageUserSteps(int id, PasosUsuariosDetalle step)
+        {
+            if (ModelState.IsValid)
+            {
+                var stepInDb = await _context.PasosUsuariosDetalle
+                .Include(p => p.PlantillaPasoDetalleNavigation)
+                    .ThenInclude(p => p.PasoNavigation)
+                        .ThenInclude(p => p.PasosInstanciasDatosDetalle)
+                            .ThenInclude(p => p.InstanciaPlantillaDatoNavigation)
+                                .ThenInclude(p => p.IdDatoTipoNavigation)
+                .Where(p => p.IdPasosUsuarios == id)
+                .FirstOrDefaultAsync();
+                stepInDb.PlantillaPasoDetalleNavigation.Estado = step.PlantillaPasoDetalleNavigation.Estado;
+                foreach (var i in step.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle)
+                {
+                    foreach (var j in stepInDb.PlantillaPasoDetalleNavigation.PasoNavigation.PasosInstanciasDatosDetalle)
+                    {
+                        if (i.IdPasosInstanciasDatos == j.IdPasosInstanciasDatos)
+                        {
+                            j.InstanciaPlantillaDatoNavigation.DatoTexto = i.InstanciaPlantillaDatoNavigation.DatoTexto;
+                            j.InstanciaPlantillaDatoNavigation.DatoFecha = i.InstanciaPlantillaDatoNavigation.DatoFecha;
+                            j.InstanciaPlantillaDatoNavigation.DatoNumerico = i.InstanciaPlantillaDatoNavigation.DatoNumerico;
+                            j.InstanciaPlantillaDatoNavigation.DatoDecimal = i.InstanciaPlantillaDatoNavigation.DatoDecimal;
+                        }
+                    }
+                }
+                _context.PasosUsuariosDetalle.Update(stepInDb);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Actualizacion de paso exitoso.";
+                return RedirectToAction(nameof(Steps));
+            }
+            else
+            {
+                ViewData["Status"] = new SelectList(_context.Acciones, "IdAccion", "Nombre");
+                return View(step);
+            }
         }
 
         [HttpGet]
@@ -80,7 +153,7 @@ namespace proyectokeneth.Controllers
 
         [HttpGet]
         [Route("Usuarios/AsignarPasos/{userName}")]
-        public async Task<IActionResult> AssignSteps(string userName)
+        public async Task<IActionResult> AssignSteps(int userName)
         {
             ViewData["UserName"] = userName;
             return View();

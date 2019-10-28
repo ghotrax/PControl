@@ -1,0 +1,55 @@
+﻿@model IEnumerable<proyectokeneth.Models.Entities.PasosUsuariosDetalle>
+@{
+    ViewData["Title"] = "Mis Pasos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_Success" />
+
+<div class="">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Descripcion
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlantillaPasoDetalleNavigation.PasoNavigation.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlantillaPasoDetalleNavigation.PasoNavigation.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlantillaPasoDetalleNavigation.EstadoNavigation.Nombre)
+                    </td>
+                    <td>
+                        <a class="btn btn-success" asp-action="ManageUserSteps" asp-route-id="@item.IdPasosUsuarios">Administrar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+}
+
+@section Scripts {
+
+}
