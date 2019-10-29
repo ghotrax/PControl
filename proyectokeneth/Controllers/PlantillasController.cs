@@ -111,7 +111,17 @@ namespace proyectokeneth.Controllers
         [Route("Plantillas/AddUser/{step}")]
         public IActionResult AddUser(Plantillas plantilla, int step)
         {
-            plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle.Add(new PlantillasPasosUsuariosDetalle());
+            if (plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle == null)
+            {
+                plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle = new List<PlantillasPasosUsuariosDetalle>
+                {
+                    new PlantillasPasosUsuariosDetalle()
+                };
+            }
+            else
+            {
+                plantilla.PlantillasPasosDetalle[step].PlantillasPasosUsuariosDetalle.Add(new PlantillasPasosUsuariosDetalle());
+            }
             SetupCreateViewBag();
             return View(nameof(Create), plantilla);
         }
